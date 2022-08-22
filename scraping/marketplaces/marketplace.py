@@ -74,6 +74,7 @@ class Marketplace():
             'body_type' : self.get_body_type(offer),
             'drive_type' : self.get_drive_type(offer),
             'engine_type' : self.get_engine_type(offer),
+            'transmission' : self.get_transmission(offer),
             'offer_location' : self.get_offer_location(offer),
             'is_offer_vip' : self.is_offer_vip(offer),
             'offer_url' : self.get_offer_url(offer),
@@ -106,6 +107,9 @@ class Marketplace():
         raise Exception('Not Implemented')
             
     def get_engine_type(self, offer):
+        raise Exception('Not Implemented')
+
+    def get_transmission(self, offer):
         raise Exception('Not Implemented')
             
     def get_offer_location(self, offer):

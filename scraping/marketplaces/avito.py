@@ -1,3 +1,4 @@
+from encodings import normalize_encoding
 from .marketplace import Marketplace
 
 class Avito(Marketplace):
@@ -52,6 +53,9 @@ class Avito(Marketplace):
     
     def get_engine_type(self, offer):
         return self.car_params[4]
+
+    def get_transmission(self, offer):
+        return None
     
     def get_offer_location(self, offer):
         return offer.select_one('div[class*=geo]').get_text()
