@@ -33,6 +33,7 @@ class Marketplace():
                'engine_capacity', 'horsepower', 'body_type', 'drive_type', 'engine_type', 
                'offer_location', 'is_offer_vip', 'offer_url', 'marketplace', 'scraping_time']
     data_file = 'data.csv'
+    logs_file = 'logs.txt'
     
     def __init__(self, marketplace_name, url_to_parse):
 
@@ -55,7 +56,8 @@ class Marketplace():
             cars_info = []
             for offer in offers:
                 car_info = self.parse_offer(offer)
-                cars_info.append(car_info)
+                if car_info:
+                    cars_info.append(car_info)
             self.save_cars_info(cars_info)
         else:
             raise Exception('Response code differs from 200')
@@ -64,23 +66,29 @@ class Marketplace():
         raise Exception('Not Implemented')
     
     def parse_offer(self, offer):
-        return {
-            'price' : self.get_price(offer),
-            'name' : self.get_name(offer),
-            'year' : self.get_year(offer),
-            'mileage' : self.get_mileage(offer),
-            'engine_capacity' : self.get_engine_capacity(offer),
-            'horsepower' : self.get_horsepower(offer),
-            'body_type' : self.get_body_type(offer),
-            'drive_type' : self.get_drive_type(offer),
-            'engine_type' : self.get_engine_type(offer),
-            'transmission' : self.get_transmission(offer),
-            'offer_location' : self.get_offer_location(offer),
-            'is_offer_vip' : self.is_offer_vip(offer),
-            'offer_url' : self.get_offer_url(offer),
-            'marketplace' : self.marketplace_name,
-            'scraping_time' : date.today()
-        }
+        try:
+            return {
+                'price' : self.get_price(offer),
+                'name' : self.get_name(offer),
+                'year' : self.get_year(offer),
+                'mileage' : self.get_mileage(offer),
+                'engine_capacity' : self.get_engine_capacity(offer),
+                'horsepower' : self.get_horsepower(offer),
+                'body_type' : self.get_body_type(offer),
+                'drive_type' : self.get_drive_type(offer),
+                'engine_type' : self.get_engine_type(offer),
+                'transmission' : self.get_transmission(offer),
+                'offer_location' : self.get_offer_location(offer),
+                'is_offer_vip' : self.is_offer_vip(offer),
+                'offer_url' : self.get_offer_url(offer),
+                'marketplace' : self.marketplace_name,
+                'scraping_time' : date.today()
+            }
+        except Exception as e:
+            logs = open(self.logs_file, 'a', encoding='utf-8')
+            logs.write('Failed to parse offer:\n{0}\n due to this error:\n{1}\n'.format(offer, str(e)))
+            logs.close()
+            return None
         
     def get_price(self, offer):
         raise Exception('Not Implemented')
