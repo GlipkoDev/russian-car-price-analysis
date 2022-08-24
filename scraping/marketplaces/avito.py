@@ -1,9 +1,9 @@
-from .marketplace import Marketplace
+from marketplaces.marketplace import Marketplace
 
 class Avito(Marketplace):
     
-    def __init__(self, marketplace_name, url_to_parse):
-        super().__init__(marketplace_name, url_to_parse)
+    def __init__(self, marketplace_name, url_to_parse, max_pages):
+        super().__init__(marketplace_name, url_to_parse, max_pages)
         
     def get_offers_on_page(self, page):
         return page.select('*[itemtype="http://schema.org/Product"]')
