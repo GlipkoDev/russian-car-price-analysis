@@ -11,13 +11,6 @@ from requests.packages.urllib3.util import ssl_
 # Scraping timestamp
 from datetime import date
 
-# Saving scraped info
-from csv import DictWriter
-from os.path import exists
-from os import mkdir
-
-from uuid import uuid4
-
 class TlsAdapter(HTTPAdapter):
 
     CIPHERS = """ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:AES256-SHA"""
@@ -32,26 +25,27 @@ class TlsAdapter(HTTPAdapter):
 
 class Marketplace():
     
-    headers = ['price', 'name', 'year', 'mileage', 
-               'engine_capacity', 'horsepower', 'body_type', 'drive_type', 'engine_type', 'transmission',
-               'offer_location', 'is_offer_vip', 'offer_url', 'marketplace', 'scraping_time']
-    data_file = 'data.csv'
-    broken_offers_subfolder = 'broken_offers'
-    
-    def __init__(self, marketplace_name, url_to_parse, max_pages):
+    def __init__(self, marketplace_name, url_to_parse, max_pages, logger):
 
         self.marketplace_name = marketplace_name
         self.url_to_parse = url_to_parse
         self.max_pages = max_pages
+        self.logger = logger
+
+        self.offers_count = 0
+        self.broken_offers_count = 0
+        
+        self.logger = logger
 
         self.session = requests.session()
         adapter = TlsAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1)
         self.session.mount("https://", adapter)
-    
+
     def parse_all_pages(self):
         for i in range(self.max_pages):
             page = self.get_page(i)
             self.parse_page(page)
+        self.logger.log_parser_work(self.marketplace_name, self.offers_count, self.broken_offers_count)
     
     def get_page(self, page_num):
         response = self.session.get(self.url_to_parse.format(page_num))
@@ -65,7 +59,8 @@ class Marketplace():
         page = bs(page, 'html.parser')
 
         offers = self.get_offers_on_page(page)
-
+        self.offers_count += len(offers)
+        
         cars_info = []
         for offer in offers:
 
@@ -73,15 +68,11 @@ class Marketplace():
                 car_info = self.parse_offer(offer)
                 cars_info.append(car_info)
             except Exception as e:
-                offer_uuid = str(uuid4())
-
-                if not exists(f'{self.broken_offers_subfolder}'):
-                    mkdir(f'{self.broken_offers_subfolder}')
-
-                with open(f'{self.broken_offers_subfolder}/{self.marketplace_name}_{offer_uuid}.txt', 'w', encoding='utf-8') as f:
-                    f.write(str(offer))
+                
+                self.broken_offers_count += 1
+                self.logger.save_broken_offer(self.marketplace_name, offer)
                     
-        self.save_cars_info(cars_info)
+        self.logger.save_cars_info(cars_info)
 
     def get_offers_on_page(self, page):
         raise Exception('Not Implemented')
@@ -142,16 +133,4 @@ class Marketplace():
         raise Exception('Not Implemented')
             
     def get_offer_url(self, offer):
-        raise Exception('Not Implemented')    
-        
-    def save_cars_info(self, cars_info):
-        need_headers = not exists(self.data_file)
-        
-        with open(self.data_file, 'a') as f:
-            writer = DictWriter(f, delimiter=',', lineterminator='\n', fieldnames = self.headers)
-            
-            if need_headers:
-                writer.writeheader()
-                
-            for car_info in cars_info:
-                writer.writerow(car_info)
+        raise Exception('Not Implemented')
