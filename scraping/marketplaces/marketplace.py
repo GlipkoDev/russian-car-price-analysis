@@ -25,9 +25,9 @@ class TlsAdapter(HTTPAdapter):
 
 class Marketplace():
     
-    def __init__(self, marketplace_name, url_to_parse, max_pages, logger):
+    def __init__(self, url_to_parse, max_pages, logger):
 
-        self.marketplace_name = marketplace_name
+        self.marketplace_name = type(self).__name__
         self.url_to_parse = url_to_parse
         self.max_pages = max_pages
         self.logger = logger

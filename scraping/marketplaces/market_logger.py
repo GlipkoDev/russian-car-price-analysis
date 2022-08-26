@@ -24,13 +24,14 @@ class MarketplaceLogger():
 
     def log_parser_work(self, marketplace_name, offers_counts, broken_offers_count):
         with open(f'{self.current_date}/logs.txt', 'a') as f:
-            f.write(f'{marketplace_name} - got in total {offers_counts} offers, {broken_offers_count} of them are broken')
+            f.write(f'{marketplace_name} - got in total {offers_counts} offers, {broken_offers_count} of them are broken\n')
 
     def save_broken_offer(self, marketplace_name, offer):
 
         offer_uuid = str(uuid4())
+        offer = str(offer).replace('\u20bd', 'Р')
 
-        with open(f'{self.current_date}/broken_offers/{self.marketplace_name}_{offer_uuid}.txt', 'w') as f:
+        with open(f'{self.current_date}/broken_offers/{marketplace_name}_{offer_uuid}.txt', 'w') as f:
             f.write(str(offer))
 
     def save_cars_info(self, cars_info):
