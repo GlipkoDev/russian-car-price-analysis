@@ -78,17 +78,20 @@ class Marketplace():
         raise Exception('Not Implemented')
     
     def parse_offer(self, offer):
+
+        mileage, engine_capacity, horsepower, body_type, drive_type, engine_type, transmission = self.get_main_params(offer)
+
         return {
             'price' : self.get_price(offer),
             'name' : self.get_name(offer),
             'year' : self.get_year(offer),
-            'mileage' : self.get_mileage(offer),
-            'engine_capacity' : self.get_engine_capacity(offer),
-            'horsepower' : self.get_horsepower(offer),
-            'body_type' : self.get_body_type(offer),
-            'drive_type' : self.get_drive_type(offer),
-            'engine_type' : self.get_engine_type(offer),
-            'transmission' : self.get_transmission(offer),
+            'mileage' : mileage,
+            'engine_capacity' : engine_capacity,
+            'horsepower' : horsepower,
+            'body_type' : body_type,
+            'drive_type' : drive_type,
+            'engine_type' : engine_type,
+            'transmission' : transmission,
             'offer_location' : self.get_offer_location(offer),
             'is_offer_vip' : self.is_offer_vip(offer),
             'offer_url' : self.get_offer_url(offer),
@@ -105,25 +108,7 @@ class Marketplace():
     def get_year(self, offer):
         raise Exception('Not Implemented')
             
-    def get_mileage(self, offer):
-        raise Exception('Not Implemented')
-            
-    def get_engine_capacity(self, offer):
-        raise Exception('Not Implemented')
-            
-    def get_horsepower(self, offer):
-        raise Exception('Not Implemented')
-            
-    def get_body_type(self, offer):
-        raise Exception('Not Implemented')
-            
-    def get_drive_type(self, offer):
-        raise Exception('Not Implemented')
-            
-    def get_engine_type(self, offer):
-        raise Exception('Not Implemented')
-
-    def get_transmission(self, offer):
+    def get_main_params(self, offer):
         raise Exception('Not Implemented')
             
     def get_offer_location(self, offer):
