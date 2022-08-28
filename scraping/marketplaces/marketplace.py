@@ -56,7 +56,6 @@ class Marketplace():
         
     
     def get_page(self, page_num):
-        raise Exception('TEST')
         response = self.session.get(self.url_to_parse.format(page_num))
         if response.status_code == 200:
             return response.content

@@ -1,5 +1,5 @@
 import os
-import shutil
+from shutil import make_archive, rmtree
 
 from datetime import date
 
@@ -16,8 +16,6 @@ class MarketplaceLogger():
     def __init__(self):
 
         self.current_date = str(date.today())
-        if os.path.exists(self.current_date):
-            shutil.rmtree(self.current_date)
 
         os.mkdir(self.current_date)
         os.mkdir(f'{self.current_date}/broken_offers')
@@ -47,7 +45,13 @@ class MarketplaceLogger():
                 
             for car_info in cars_info:
                 writer.writerow(car_info)
-        
+
+    def zip_logs(self):
+        make_archive(self.current_date, 'zip', self.current_date)
+
+    def clear_logs(self):
+        rmtree(self.current_date)
+        os.remove(f'{self.current_date}.zip')
 
     
 
