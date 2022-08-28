@@ -5,12 +5,12 @@ from marketplaces.drom import Drom
 from marketplaces.auto import Auto
 
 logger = MarketplaceLogger()
-parsers = [
+marketplaces = [
     Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 2, logger),
     Drom('https://auto.drom.ru/all/page{}/', 2, logger),
     Auto('https://auto.ru/rossiya/cars/all/?page={}', 2, logger)
     ]
 
-for parser in parsers:
-    parser.parse_all_pages()
+for marketplace in marketplaces:
+    marketplace.parse_all_pages()
 

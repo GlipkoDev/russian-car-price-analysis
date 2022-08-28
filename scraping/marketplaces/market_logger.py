@@ -22,9 +22,11 @@ class MarketplaceLogger():
         os.mkdir(self.current_date)
         os.mkdir(f'{self.current_date}/broken_offers')
 
-    def log_parser_work(self, marketplace_name, offers_counts, broken_offers_count):
+    def save_parser_summary(self, marketplace_name, offers_counts, broken_offers_count, was_interrupted, interruption_reason):
         with open(f'{self.current_date}/logs.txt', 'a') as f:
-            f.write(f'{marketplace_name} - got in total {offers_counts} offers, {broken_offers_count} of them are broken\n')
+            f.write(f'{marketplace_name}\nGot in total {offers_counts} offers, {broken_offers_count} of them are broken\n')
+            if was_interrupted:
+                f.write(f'{marketplace_name} parser was stopped due to \n{interruption_reason}\n')
 
     def save_broken_offer(self, marketplace_name, offer):
 

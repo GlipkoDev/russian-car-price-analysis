@@ -42,12 +42,21 @@ class Marketplace():
         self.session.mount("https://", adapter)
 
     def parse_all_pages(self):
+        was_interrupted = False
+        interruption_reason = None
         for i in range(self.max_pages):
-            page = self.get_page(i)
+            try:
+                page = self.get_page(i)
+            except Exception as e:
+                was_interrupted = True
+                interruption_reason = e
+                break
             self.parse_page(page)
-        self.logger.log_parser_work(self.marketplace_name, self.offers_count, self.broken_offers_count)
+        self.logger.save_parser_summary(self.marketplace_name, self.offers_count, self.broken_offers_count, was_interrupted, interruption_reason)
+        
     
     def get_page(self, page_num):
+        raise Exception('TEST')
         response = self.session.get(self.url_to_parse.format(page_num))
         if response.status_code == 200:
             return response.content
