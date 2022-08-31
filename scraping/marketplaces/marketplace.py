@@ -56,6 +56,7 @@ class Marketplace():
                 was_interrupted = True
                 interruption_reason = e
                 break
+            self.parse_page(page)
             time.sleep(self.delay)
             yield None
         self.logger.save_parser_summary(self.marketplace_name, self.offers_count, self.broken_offers_count, was_interrupted, interruption_reason)
