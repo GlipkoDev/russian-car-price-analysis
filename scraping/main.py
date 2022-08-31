@@ -5,6 +5,7 @@ from marketplaces.avito import Avito
 from marketplaces.drom import Drom
 from marketplaces.auto import Auto
 
+try:
     logger = MarketplaceLogger()
     marketplaces = [
         Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 2, logger, 0),
@@ -23,3 +24,6 @@ from marketplaces.auto import Auto
 
     postman = Postman(logger)
     postman.send_logs()
+except Exception as e:
+    print(e)
+    logger.clear_logs()

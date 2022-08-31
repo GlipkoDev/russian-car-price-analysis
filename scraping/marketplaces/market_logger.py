@@ -21,7 +21,7 @@ class MarketplaceLogger():
         os.mkdir(f'{self.current_date}/broken_offers')
 
     def save_parser_summary(self, marketplace_name, offers_counts, broken_offers_count, was_interrupted, interruption_reason):
-        with open(f'{self.current_date}/logs.txt', 'a') as f:
+        with open(f'{self.current_date}/logs.txt', 'a', encoding='utf-8') as f:
             f.write(f'{marketplace_name}\nGot in total {offers_counts} offers, {broken_offers_count} of them are broken\n')
             if was_interrupted:
                 f.write(f'{marketplace_name} parser was stopped due to \n{interruption_reason}\n')
@@ -31,13 +31,13 @@ class MarketplaceLogger():
         offer_uuid = str(uuid4())
         offer = str(offer).replace('\u20bd', 'Р')
 
-        with open(f'{self.current_date}/broken_offers/{marketplace_name}_{offer_uuid}.txt', 'w') as f:
+        with open(f'{self.current_date}/broken_offers/{marketplace_name}_{offer_uuid}.txt', 'w', encoding='utf-8') as f:
             f.write(str(offer))
 
     def save_cars_info(self, cars_info):
         need_headers = not os.path.exists(f'{self.current_date}/data.csv')
         
-        with open(f'{self.current_date}/data.csv', 'a') as f:
+        with open(f'{self.current_date}/data.csv', 'a', encoding='utf-8') as f:
             writer = DictWriter(f, delimiter=',', lineterminator='\n', fieldnames = self.data_headers)
             
             if need_headers:
@@ -50,8 +50,9 @@ class MarketplaceLogger():
         make_archive(self.current_date, 'zip', self.current_date)
 
     def clear_logs(self):
-        rmtree(self.current_date)
-        os.remove(f'{self.current_date}.zip')
+        rmtree(self.current_date, ignore_errors=True)
+        if os.path.exists(f'{self.current_date}.zip'):
+            os.remove(f'{self.current_date}.zip')
 
     
 
