@@ -11,6 +11,9 @@ from requests.packages.urllib3.util import ssl_
 # Scraping timestamp
 from datetime import date
 
+# Delay in requests
+import time
+
 class TlsAdapter(HTTPAdapter):
 
     CIPHERS = """ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:AES256-SHA"""
@@ -25,12 +28,13 @@ class TlsAdapter(HTTPAdapter):
 
 class Marketplace():
     
-    def __init__(self, url_to_parse, max_pages, logger):
+    def __init__(self, url_to_parse, max_pages, logger, delay):
 
         self.marketplace_name = type(self).__name__
         self.url_to_parse = url_to_parse
         self.max_pages = max_pages
         self.logger = logger
+        self.delay = delay
 
         self.offers_count = 0
         self.broken_offers_count = 0
@@ -44,14 +48,16 @@ class Marketplace():
     def parse_all_pages(self):
         was_interrupted = False
         interruption_reason = None
-        for i in range(self.max_pages):
+        for i in range(1, self.max_pages+1):
+            print(f'{self.marketplace_name} - {i}')
             try:
                 page = self.get_page(i)
             except Exception as e:
                 was_interrupted = True
                 interruption_reason = e
                 break
-            self.parse_page(page)
+            time.sleep(self.delay)
+            yield None
         self.logger.save_parser_summary(self.marketplace_name, self.offers_count, self.broken_offers_count, was_interrupted, interruption_reason)
         
     

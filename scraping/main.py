@@ -5,16 +5,21 @@ from marketplaces.avito import Avito
 from marketplaces.drom import Drom
 from marketplaces.auto import Auto
 
-logger = MarketplaceLogger()
-marketplaces = [
-    Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 1, logger),
-    Drom('https://auto.drom.ru/all/page{}/', 1, logger),
-    Auto('https://auto.ru/rossiya/cars/all/?page={}', 1, logger)
-    ]
+    logger = MarketplaceLogger()
+    marketplaces = [
+        Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 2, logger, 0),
+        Drom('https://auto.drom.ru/all/page{}/', 1, logger, 0),
+        Auto('https://auto.ru/rossiya/cars/all/?page={}', 1, logger, 0)
+        ]
 
-for marketplace in marketplaces:
-    marketplace.parse_all_pages()
+    generators = [marketplace.parse_all_pages() for marketplace in marketplaces]
 
-postman = Postman(logger)
-postman.send_logs()
+    while len(generators) > 0:
+        try:
+            for generator in generators:
+                next(generator)
+        except StopIteration:
+            generators.remove(generator)
 
+    postman = Postman(logger)
+    postman.send_logs()
