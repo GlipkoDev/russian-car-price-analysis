@@ -1,3 +1,5 @@
+import sys
+
 from marketplaces.market_logger import MarketplaceLogger
 from marketplaces.postman import Postman
 
@@ -5,12 +7,15 @@ from marketplaces.avito import Avito
 from marketplaces.drom import Drom
 from marketplaces.auto import Auto
 
+pages_to_scrape = int(sys.argv[1])
+delay = int(sys.argv[2])
+
 try:
     logger = MarketplaceLogger()
     marketplaces = [
-        Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 100, logger, 120),
-        Drom('https://auto.drom.ru/all/page{}/', 100, logger, 0),
-        Auto('https://auto.ru/rossiya/cars/all/?page={}', 100, logger, 120)
+        Avito('https://www.avito.ru/rossiya/avtomobili?p={}', pages_to_scrape, logger, delay),
+        Drom('https://auto.drom.ru/all/page{}/', pages_to_scrape, logger, delay),
+        Auto('https://auto.ru/rossiya/cars/all/?page={}', pages_to_scrape, logger, delay)
         ]
 
     generators = [marketplace.parse_all_pages() for marketplace in marketplaces]

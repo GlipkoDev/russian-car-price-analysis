@@ -1,6 +1,4 @@
-from msilib.schema import MIME
-import os
-from shutil import make_archive
+from marketplaces.postman_info import email, password
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -13,9 +11,6 @@ class Postman:
 
     def send_logs(self):
         self.logger.zip_logs()
-
-        email = os.environ['MY_GMAIL']
-        password = os.environ['CAR_ANALYSIS_GMAIL_PASSWORD']
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
