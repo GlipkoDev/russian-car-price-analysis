@@ -8,9 +8,9 @@ from marketplaces.auto import Auto
 try:
     logger = MarketplaceLogger()
     marketplaces = [
-        Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 2, logger, 0),
-        Drom('https://auto.drom.ru/all/page{}/', 1, logger, 0),
-        Auto('https://auto.ru/rossiya/cars/all/?page={}', 1, logger, 0)
+        Avito('https://www.avito.ru/rossiya/avtomobili?p={}', 100, logger, 120),
+        Drom('https://auto.drom.ru/all/page{}/', 100, logger, 0),
+        Auto('https://auto.ru/rossiya/cars/all/?page={}', 100, logger, 120)
         ]
 
     generators = [marketplace.parse_all_pages() for marketplace in marketplaces]
